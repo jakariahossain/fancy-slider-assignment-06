@@ -37,16 +37,27 @@
             placeholder="nature"
           />
         </div>
-        <button type="button" id="search-btn" class="btn btn-primary mb-2" onclick="getImages()">
+        <button type="button" id="search-btn" class="btn btn-primary mb-2">
           Search
         </button>
       </div>
+
       <!-- Spinner -->
       <div id="loader" class="text-center d-none">
         <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden"></span>
         </div>
       </div>
+
+      <!-- Error Messages -->
+        <div class="data-err text-center" id="data-err-msg"><i class="fas fa-exclamation-circle"></i> We didn't find any images with your search keyword</div>
+
+        <div id="select-msg" class="select-img text-center"> <i class="fas fa-exclamation-circle"></i> Please select at least 2 Images</div>
+
+        <div id="duration-error" class="duration-err-msg text-center">
+          <i class="fas fa-exclamation-circle"></i> Duration value should be at least 1000 millisecond to 10000 millisecond
+        </div>
+
       <section class="images">
         <div
           class="justify-content-around align-items-center mt-3 gallery-header mb-2"

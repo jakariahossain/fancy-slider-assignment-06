@@ -2,8 +2,17 @@ const imagesArea = document.querySelector(".images");
 const gallery = document.querySelector(".gallery");
 const galleryHeader = document.querySelector(".gallery-header");
 const searchBtn = document.getElementById("search-btn");
+const searchField = document.getElementById("search");
 const sliderBtn = document.getElementById("create-slider");
 const sliderContainer = document.getElementById("sliders");
+
+// For Error Message 
+const dataError = document.getElementById('data-err-msg');
+const selectError = document.getElementById('select-msg');
+const durationError = document.getElementById('duration-error');
+
+
+
 // selected image
 let sliders = [];
 
@@ -14,25 +23,38 @@ const KEY = "15674931-a9d714b6e9d654524df198e00&q";
 
 // show images
 const showImages = images => {
-  // console.log(images);
+  
   imagesArea.style.display = "block";
   gallery.innerHTML = "";
   // show gallery title
-  galleryHeader.style.display = "flex";
-  images.forEach((image) => {
-    const div = document.createElement("div");
-    div.className = "col-lg-3 col-md-4 col-xs-6 img-item mb-2";
-    div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
-    gallery.appendChild(div);
+  if(images.length == 0){
+    dataError.style.display = "block";
+  }else{
+    dataError.style.display = "none";
+    galleryHeader.style.display = "flex";
+    images.forEach((image) => {
+      const div = document.createElement("div");
+      div.className = "col-lg-3 col-md-4 col-xs-6 img-item mb-2";
+      div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}"> 
+      <span class="show-info">
+        <span class="user-info">${image.user}</span>
+        <span class="likes">
+        <i class="far fa-thumbs-up"></i> ${image.likes} <span style="margin-right:5px"></span>
+        <i class="far fa-star"></i> ${image.favorites}
+        </span>
+      </span>
+      `;
+      gallery.appendChild(div);
 
-    toggleSpinner(false);
-    
-  });
+      toggleSpinner(false);
+      
+    });
+  }
 };
 
 const getImages = () => {
-  const searchText = document.getElementById('search').value;
-  const url = `https://pixabay.com/api/?key=${KEY}=${searchText}&image_type=photo&pretty=true`;
+  
+  const url = `https://pixabay.com/api/?key=${KEY}=${searchField.value}&image_type=photo&pretty=true`;
   toggleSpinner(true);
   fetch(url)
     .then((response) => response.json())
@@ -48,17 +70,13 @@ const selectItem = (event, img) => {
   element.classList.add("added");
 
   let item = sliders.indexOf(img);
-  if (item === -1) {
+  if(item === -1) {
     sliders.push(img);
-    
-    
-  } else {
-    if (item > -1) {
-      sliders.splice(item, 1);
+  }else{
+    const deSelect = sliders.indexOf(img);
+    if (deSelect > -1) {
+      sliders.splice(deSelect, 1);
       element.classList.remove("added");
-    }else{
-      element.classList.add("added");
-      sliders.push(img);
     }
   }
 };
@@ -66,17 +84,20 @@ var timer;
 const createSlider = () => {
   // check slider image length
   if (sliders.length < 2) {
-    alert("Select at least 2 image.");
+    selectError.style.display = "block";
     return;
+  }else{
+    selectError.style.display = "none";
   }
   // crate slider previous next area
 
   const duration = document.getElementById("duration").value || 1000;
   if (duration < 1000 || duration > 10000) {
-    alert(
-      "Duration value should be at least 1000 millisecond to 10000 millisecond "
-    );
+    durationError.style.display = "block";
+    
   } else {
+    durationError.style.display = "none";
+
     sliderContainer.innerHTML = "";
     const prevNext = document.createElement("div");
     prevNext.className =
@@ -132,16 +153,19 @@ const changeSlide = (index) => {
 
   items[index].style.display = "block";
 };
-const searchInput = document.getElementById('search').addEventListener("keypress", function (event) {
-      if (event.key == "Enter") {
-        document.getElementById("search-btn").click();
-        document.querySelector(".main").style.display = "none";
-        clearInterval(timer);
-        const search = document.getElementById("search");
-        getImages(search.value);
-        sliders.length = 0;
-    }
-  
+
+
+searchField.addEventListener("keypress", function (event) {
+  if (event.key == "Enter") {
+    searchBtn.click();
+  }
+});
+
+searchBtn.addEventListener("click", function () {
+  document.querySelector(".main").style.display = "none";
+  clearInterval(timer);
+  getImages(searchField.value);
+  sliders.length = 0;
 });
 
 
@@ -149,23 +173,9 @@ sliderBtn.addEventListener("click", function () {
   createSlider();
 });
 
-// Toggle Spinner
-// const toggleSpinner = (show) => {
-//   const spinner = document.getElementById('loading-spinner');
-//   console.log(spinner.classList);
-//   const imgContainer = document.getElementById('image-container');
-//   if(show){
-//     spinner.classList.remove('d-none-one');
-//   }
-//   else{
-//     spinner.classList.add('d-none-one');
-//   }
-  
-// }
 
 const toggleSpinner = (show) => {
   const spinner = document.getElementById('loader');
-  console.log(spinner.classList);
   if(show){
   spinner.classList.remove('d-none');
   }else{

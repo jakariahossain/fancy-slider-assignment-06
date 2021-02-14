@@ -55,6 +55,55 @@ img {
   display: none;
 }
 
+/* Download Style */
+span.show-info {
+  position: relative;
+  bottom: 32px;
+  color: #fff;
+  background-color: rgba(0,0,0,0.6);
+  padding: 5px 10px;
+  width: 100%;
+  border: 5px solid #fff;
+  border-top: none;
+  display: none;
+  font-size: 13px;
+  
+  
+ 
+
+}
+
+.img-item{
+  width: 280px;
+  height: 190px;
+  
+
+}
+.img-item img{
+  width: 100%;
+  height: 100%;
+}
+
+.img-item:hover span.show-info{
+  display: inline-block;
+  
+  
+}
+
+span.user-info{
+  float: left;
+}
+span.likes{
+  float: right;
+  font-size: 12px;
+}
+
+/* Error message */
+.select-img, .data-err, .duration-err-msg{
+  display: none;
+  color: red;
+  font-weight: bold;
+}
 
 
 @media (max-width: 767px) {
